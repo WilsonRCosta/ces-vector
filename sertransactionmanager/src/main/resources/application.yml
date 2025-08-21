@@ -1,0 +1,33 @@
+quarkus:
+  tls:
+    trust-all: true
+  smallrye-openapi:
+    path: /tm/openapi
+  swagger-ui:
+    always-include: true
+    path: /tm/swagger
+  container-image:
+    group: iesd
+    name: sertransactionmanager
+    tag: 1.0
+
+"%prod":
+  hostname: ${HOSTNAME}
+  quarkus:
+    rest-client:
+      service-xa:
+        url: "http://vector-service:9100"
+      service-lu:
+        url: "http://lookup-service:9003"
+
+"%dev":
+  hostname: "127.0.0.1:9001"
+  quarkus:
+    rest-client:
+      service-xa:
+        url: "http://127.0.0.1:9100"
+      service-lu:
+        url: "http://127.0.0.1:9003"
+    http:
+      host: 127.0.0.1
+      port: 9001

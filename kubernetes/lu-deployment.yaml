@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lookup
+  labels:
+    app: lookup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lookup
+  template:
+    metadata:
+      labels:
+        app: lookup
+    spec:
+      containers:
+        - name: serlookupservice
+          image: wilsonrcosta/iesd:serlookupservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: registrypullsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lookup-service
+spec:
+  selector:
+    app: lookup # Needs to match Pod label
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9003
+      targetPort: 8080 # Needs to match containerPort

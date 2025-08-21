@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector
+  labels:
+    app: vector
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vector
+  template:
+    metadata:
+      labels:
+        app: vector
+    spec:
+      containers:
+        - name: servector
+          image: wilsonrcosta/iesd:servector
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: registrypullsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector-service
+spec:
+  selector:
+    app: vector # Needs to match Pod label
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9100
+      targetPort: 8080 # Needs to match containerPort

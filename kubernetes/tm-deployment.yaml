@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transactionmanager
+  labels:
+    app: transactionmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transactionmanager
+  template:
+    metadata:
+      labels:
+        app: transactionmanager
+    spec:
+      containers:
+        - name: sertransactionmanager
+          image: wilsonrcosta/iesd:sertransactionmanager
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: registrypullsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transactionmanager-service
+spec:
+  selector:
+    app: transactionmanager # Needs to match Pod label
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9001
+      targetPort: 8080 # Needs to match containerPort

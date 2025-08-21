@@ -1,0 +1,27 @@
+quarkus:
+  smallrye-openapi:
+    path: /tplm/openapi
+  swagger-ui:
+    always-include: true
+    path: /tplm/swagger
+  container-image:
+    group: iesd
+    name: serlockmanager
+    tag: 1.0
+
+"%prod":
+  hostname: ${HOSTNAME}
+  quarkus:
+    rest-client:
+      service-lu:
+        url: "http://lookup-service:9003"
+
+"%dev":
+  hostname: "127.0.0.1:9002"
+  quarkus:
+    http:
+      host: 127.0.0.1
+      port: 9002
+    rest-client:
+      service-lu:
+        url: "http://127.0.0.1:9003"

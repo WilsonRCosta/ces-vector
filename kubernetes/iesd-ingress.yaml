@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iesd-ingress
+spec:
+  rules:
+    - host: isos.iesd.pt
+      http:
+        paths:
+          - path: /tm
+            pathType: Prefix
+            backend:
+              service:
+                name: transactionmanager-service # Needs to match the service name
+                port:
+                  number: 9001 # Needs to match the internal service port
+          - path: /tplm
+            pathType: Prefix
+            backend:
+              service:
+                name: lockmanager-service
+                port:
+                  number: 9002
+          - path: /vector
+            pathType: Prefix
+            backend:
+              service:
+                name: vector-service
+                port:
+                  number: 9100

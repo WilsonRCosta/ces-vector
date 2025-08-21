@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lockmanager
+  labels:
+    app: lockmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lockmanager
+  template:
+    metadata:
+      labels:
+        app: lockmanager
+    spec:
+      containers:
+      - name: serlockmanager
+        image: wilsonrcosta/iesd:serlockmanager
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: registrypullsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lockmanager-service
+spec:
+  selector:
+    app: lockmanager # Needs to match Pod label
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9002
+      targetPort: 8080 # Needs to match containerPort

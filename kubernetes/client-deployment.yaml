@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  labels:
+    app: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: servectorclient
+          image: wilsonrcosta/iesd:servectorclient
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: registrypullsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-service
+spec:
+  selector:
+    app: client # Needs to match Pod label
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 8080 # Needs to match containerPort
